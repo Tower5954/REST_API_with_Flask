@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
@@ -22,19 +22,31 @@ stores = [
 # POST /store data: {name}
 @app.route('/store', methods=['POST'])
 def create_store():
-    pass
+    request_data = request.get_json()
+    new_store = {
+        "name": request_data["name"],
+        "items": []
+    }
+    stores.append(new_store)
+    return jsonify(new_store)
 
 
 # GET /store/<string:name>
 @app.route('/store/<string:name>')     # 'http://127.0.0.1:5000/store/some_name'
 def get_store(name):
-    pass
+    # iterate over stores
+    # if the store name matches, return it
+    # if none match, return it
+    for store in stores:
+        if store["name"] == name:
+            return jsonify(store)
+        return jsonify({"[MSG]": "Store not found"})
 
 
 # GET /store
 @app.route('/store')
 def get_stores():
-    pass
+    return jsonify({"stores": stores})
 
 
 # POST /store/<string:name>/item
